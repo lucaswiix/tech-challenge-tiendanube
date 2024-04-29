@@ -1,13 +1,9 @@
-export class FindAllByMerchantId {
+export class SummaryByMerchantId {
   merchantId: string;
-  filters: {
+  filters?: {
     betweenDates?: {
       startDate: string;
       endDate: string;
     };
-  };
-  pagination: {
-    limit: number;
-    page: number;
   };
 }

@@ -1,11 +1,18 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreatePayableDto } from './dto/create-payable.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindAllByMerchantId } from './dto/find-all-by-merchant-id.dto';
+import { SummaryByMerchantId } from './dto/find-all-by-merchant-id.dto';
 import { PayableModel } from './factory/payable.factory';
 import { Repository } from 'typeorm';
-import { Payable } from './entities/payable.entity';
-import { addDays, endOfDay, isBefore, startOfDay } from 'date-fns';
+import { Payable, PayableStatusEnum } from './entities/payable.entity';
+import {
+  addDays,
+  endOfDay,
+  endOfMonth,
+  isBefore,
+  startOfDay,
+  startOfMonth,
+} from 'date-fns';
 
 @Injectable()
 export class PayablesService {
@@ -20,35 +27,71 @@ export class PayablesService {
     return this.payablesRepository.save(this.payablesRepository.create(create));
   }
 
-  async findAll({ merchantId, filters, pagination }: FindAllByMerchantId) {
-    const queryBuilder = this.payablesRepository
-      .createQueryBuilder('entity')
-      .where('entity.merchantId = :merchantId', {
-        merchantId,
-      });
+  async summary({ merchantId, filters }: SummaryByMerchantId) {
+    const { startDate, endDate } = this.validateBetweenDates({
+      startDate:
+        filters?.betweenDates?.startDate ||
+        startOfMonth(new Date()).toISOString(),
+      endDate:
+        filters?.betweenDates?.endDate || endOfMonth(new Date()).toISOString(),
+    });
 
-    if (filters?.betweenDates) {
-      const { startDate, endDate } = this.validateBetweenDates({
-        startDate: filters.betweenDates.startDate,
-        endDate: filters.betweenDates.endDate,
-      });
-
-      queryBuilder
+    const [total, fees, futureEarnings] = await Promise.all([
+      this.payablesRepository
+        .createQueryBuilder('entity')
+        .select('sum(entity.total)', 'total')
+        .where('entity.merchantId = :merchantId', {
+          merchantId,
+        })
         .andWhere('entity.createdAt >= :startDate', {
           startDate,
         })
         .andWhere('entity.createdAt <= :endDate', {
           endDate,
-        });
-    }
+        })
+        .andWhere('entity.status = :status', {
+          status: PayableStatusEnum.PAID,
+        })
+        .getRawOne(),
+      this.payablesRepository
+        .createQueryBuilder('entity')
+        .select('sum(entity.discount)', 'total')
+        .where('entity.merchantId = :merchantId', {
+          merchantId,
+        })
+        .andWhere('entity.createdAt >= :startDate', {
+          startDate,
+        })
+        .andWhere('entity.createdAt <= :endDate', {
+          endDate,
+        })
+        .andWhere('entity.status = :status', {
+          status: PayableStatusEnum.PAID,
+        })
+        .getRawOne(),
+      this.payablesRepository
+        .createQueryBuilder('entity')
+        .select('sum(entity.total)', 'total')
+        .where('entity.merchantId = :merchantId', {
+          merchantId,
+        })
+        .andWhere('entity.createdAt >= :startDate', {
+          startDate,
+        })
+        .andWhere('entity.createdAt <= :endDate', {
+          endDate,
+        })
+        .andWhere('entity.status = :status', {
+          status: PayableStatusEnum.WAITING_FUNDS,
+        })
+        .getRawOne(),
+    ]);
 
-    const [data, total] = await queryBuilder
-      .skip((pagination.page - 1) * pagination.limit)
-      .take(pagination.limit)
-      .orderBy('entity.createdAt', 'DESC')
-      .getManyAndCount();
-
-    return { data, total };
+    return {
+      totalPaid: parseFloat(total.tota) || 0,
+      feePaid: parseFloat(fees.total) || 0,
+      futureEarnings: parseFloat(futureEarnings.total) || 0,
+    };
   }
 
   private validateBetweenDates = ({
