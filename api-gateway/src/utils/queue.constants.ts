@@ -6,7 +6,7 @@ export const MESSAGE_PATTERNS = {
   transactions: {
     create: 'createTransactions',
   },
-  payable: {
-    findAll: 'findAllPayables',
+  payables: {
+    summary: 'summaryPayables',
   },
 };

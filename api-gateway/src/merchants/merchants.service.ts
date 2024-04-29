@@ -6,17 +6,16 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { MESSAGE_PATTERNS } from './services.constants';
 import { firstValueFrom, timeout } from 'rxjs';
 import { Merchant } from './models/merchant.model';
 import { IMerchant } from './merchants.interfaces';
 import { EVENT_TIMEOUT } from 'src/utils/constants';
+import { MESSAGE_PATTERNS } from 'src/utils/queue.constants';
 
 @Injectable()
 export class MerchantsService {
   constructor(
     @Inject('MERCHANTS_CLIENT') private readonly merchantsClient: ClientProxy,
-    @Inject('PAYABLES_CLIENT') private readonly payableClient: ClientProxy,
   ) {}
 
   private readonly logger = new Logger(MerchantsService.name);
@@ -39,38 +38,5 @@ export class MerchantsService {
     const merchant = new Merchant(response.id);
 
     return merchant;
-  }
-
-  async findAll(
-    id: string,
-    {
-      filters,
-      pagination,
-    }: {
-      filters?: {
-        betweenDates?: {
-          startDate: string;
-          endDate: string;
-        };
-      };
-      pagination: {
-        page: number;
-        limit: number;
-      };
-    },
-  ) {
-    this.logger.debug('[Request] MerchantsService.findAll');
-
-    const response = await firstValueFrom(
-      this.payableClient.send(MESSAGE_PATTERNS.payable.findAll, {
-        merchantId: id,
-        filters,
-        pagination,
-      }),
-    );
-
-    this.logger.debug('[Request] MerchantsService.findAll.response', response);
-
-    return response;
   }
 }

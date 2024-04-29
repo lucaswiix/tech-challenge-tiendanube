@@ -5,6 +5,7 @@ import databaseConfig from './config/database.config';
 import appConfig from './config/app.config';
 import rabbitMqConfig from './config/rabbit-mq.config';
 import { TransactionsModule } from './transactions/transactions.module';
+import { PayablesModule } from './payables/payables.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { TransactionsModule } from './transactions/transactions.module';
     }),
     TransactionsModule,
     MerchantsModule,
+    PayablesModule,
   ],
 })
 export class AppModule {}
