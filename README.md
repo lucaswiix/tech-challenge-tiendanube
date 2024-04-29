@@ -1,5 +1,19 @@
 # PT-BR 🇧🇷
 
+Desafio desenvolvido em menos de 4 horas de desenvolvimento, com isso alguns processos foram adiados com o objetivo de entregar o desafio (como por exemplo de testes unitários). No caso do saga os testes são mais complexos pois necessita a implementação de mocks de toda camada de dominio assim como a camada responsavel pela manipulação de eventos (com rxjs).
+
+## Patterns
+
+Para melhor abstração da aplicação e consequencimento legibilidade para a condicional do modo de pagamento na entidade payable foi utilizado o abstract factory.
+Para confiabilidade de pipeline durante o processo entre os microserviços e escalabilidade foi utilizado o pattern SAGA (não completo).
+Os services assim como events e commands (no caso do saga) são utilizados como camada de dominio. 
+Os endpoints estão respeitando o padrão restful.
+
+```
+POST /merchants/:id/transactions
+GET /merchants/:id/payables?page=1&limit=10&start_date=xxxx-xx-xx&end_date=xxxx-xx-xx
+```
+
 
 ## Infraestrutura
 
