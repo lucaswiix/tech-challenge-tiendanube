@@ -41,6 +41,14 @@ Utilizado o banco de dados relacional postgres.
 
 ![ERD](docs/images/erd.png#center)
 
+Para facilitar a demostração é criado de maneira automatica um merchant
+
+```
+id: 8e33fb74-8bdb-4f38-9f64-ca56c3051fa5
+name: Jhon Smith
+documentId: 1112223334455
+```
+
 
 ## Como executar
 ```

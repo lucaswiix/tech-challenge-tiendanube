@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { MESSAGE_PATTERNS } from './services.constants';
 import { firstValueFrom, timeout } from 'rxjs';
@@ -13,7 +19,10 @@ export class MerchantsService {
     @Inject('PAYABLES_CLIENT') private readonly payableClient: ClientProxy,
   ) {}
 
+  private readonly logger = new Logger(MerchantsService.name);
+
   async findOne(id: string): Promise<Merchant> {
+    this.logger.debug('[Request] MerchantsService.findOne.response', id);
     const response: IMerchant = await firstValueFrom(
       this.merchantsClient
         .send(MESSAGE_PATTERNS.merchant.findOne, {
@@ -25,6 +34,7 @@ export class MerchantsService {
     if (!response) {
       throw new HttpException('Merchant not found', HttpStatus.NOT_FOUND);
     }
+    this.logger.debug('[Request] MerchantsService.findOne.response', response);
 
     const merchant = new Merchant(response.id);
 
@@ -49,6 +59,8 @@ export class MerchantsService {
       };
     },
   ) {
+    this.logger.debug('[Request] MerchantsService.findAll');
+
     const response = await firstValueFrom(
       this.payableClient.send(MESSAGE_PATTERNS.payable.findAll, {
         merchantId: id,
@@ -56,6 +68,9 @@ export class MerchantsService {
         pagination,
       }),
     );
+
+    this.logger.debug('[Request] MerchantsService.findAll.response', response);
+
     return response;
   }
 }

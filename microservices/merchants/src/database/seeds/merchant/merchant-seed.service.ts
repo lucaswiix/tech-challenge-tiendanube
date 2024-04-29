@@ -10,7 +10,12 @@ export class MerchantSeedService {
   ) {}
 
   async run() {
-    const isExist = await this.repository.count();
+    const merchantId = '8e33fb74-8bdb-4f38-9f64-ca56c3051fa5';
+    const isExist = await this.repository.count({
+      where: {
+        id: merchantId,
+      },
+    });
 
     if (isExist) {
       return;
@@ -18,6 +23,7 @@ export class MerchantSeedService {
 
     await this.repository.save(
       this.repository.create({
+        id: merchantId,
         name: 'John Smith',
         documentId: '11122233344',
       }),

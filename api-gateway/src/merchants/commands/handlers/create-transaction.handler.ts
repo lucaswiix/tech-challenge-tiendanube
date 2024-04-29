@@ -1,7 +1,7 @@
 import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
-import * as clc from 'cli-color';
 import { CreateTransactionCommand } from '../impl/create-transaction.command';
 import { MerchantsService } from 'src/merchants/merchants.service';
+import { Logger } from '@nestjs/common';
 
 @CommandHandler(CreateTransactionCommand)
 export class CreateTransactionHandler
@@ -12,13 +12,15 @@ export class CreateTransactionHandler
     private readonly publisher: EventPublisher,
   ) {}
 
-  async execute(command: CreateTransactionCommand) {
-    console.log(clc.greenBright('ConsultingMerchant...'));
+  private readonly logger = new Logger(CreateTransactionHandler.name);
 
+  async execute(command: CreateTransactionCommand) {
+    this.logger.debug('CreateTransactionHandler', command);
     const { merchantId, transaction } = command;
     const merchant = this.publisher.mergeObjectContext(
       await this.merchantsService.findOne(merchantId),
     );
+    this.logger.debug('CreateTransactionHandler.merchant', merchant);
     merchant.createTransaction(transaction);
     merchant.commit();
   }
