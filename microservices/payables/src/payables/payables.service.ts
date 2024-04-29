@@ -97,7 +97,7 @@ export class PayablesService {
     ]);
 
     return {
-      totalPaid: parseFloat(total.tota) || 0,
+      totalPaid: parseFloat(total.total) || 0,
       feePaid: parseFloat(fees.total) || 0,
       futureEarnings: parseFloat(futureEarnings.total) || 0,
     };
