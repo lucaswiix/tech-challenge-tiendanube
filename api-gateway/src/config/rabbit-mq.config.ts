@@ -1,7 +1,9 @@
 import { registerAs } from '@nestjs/config';
-import { RabbitMQ } from './config.type';
+import { RabbitMqConfig } from './config.type';
 
-export default registerAs<RabbitMQ>('rabbitmq', () => ({
-  port: process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT, 10) : 6379,
-  host: process.env.REDIS_HOST || 'localhost',
+export default registerAs<RabbitMqConfig>('rabbitmq', () => ({
+  port: process.env.RABBITMQ_PORT
+    ? parseInt(process.env.RABBITMQ_PORT, 10)
+    : 6379,
+  host: process.env.RABBITMQ_HOST || 'localhost',
 }));

@@ -7,21 +7,29 @@ import { Transaction } from './entities/transaction.entity';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { EventHandlers } from './events/handlers';
 import { CommandHandlers } from './commands/handlers';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AllConfigType } from 'src/config/config.type';
 
 @Module({
   imports: [
     CqrsModule,
-    ClientsModule.register([
+    ClientsModule.registerAsync([
       {
         name: 'PAYABLES_CLIENT',
-        transport: Transport.RMQ,
-        options: {
-          urls: ['amqp://localhost:5672'],
-          queue: 'payables',
-          queueOptions: {
-            durable: false,
+        imports: [ConfigModule],
+        useFactory: (configService: ConfigService<AllConfigType>) => ({
+          transport: Transport.RMQ,
+          options: {
+            queue: 'payables',
+            urls: [
+              `amqp://${configService.get<string>('rabbitmq.host', { infer: true })}:${configService.get<string>('rabbitmq.port', { infer: true })}`,
+            ],
+            queueOptions: {
+              durable: false,
+            },
           },
-        },
+        }),
+        inject: [ConfigService],
       },
     ]),
     TypeOrmModule.forFeature([Transaction]),

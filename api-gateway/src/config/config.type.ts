@@ -2,6 +2,7 @@ export type AppConfig = {
   nodeEnv: string;
   name: string;
   workingDirectory: string;
+  frontendDomain?: string;
   backendDomain: string;
   port: number;
   apiPrefix: string;
@@ -27,13 +28,13 @@ export type DatabaseConfig = {
   cert?: string;
 };
 
-export type RabbitMQ = {
-  port: number;
-  host: string;
+export type RabbitMqConfig = {
+  host?: string;
+  port?: number;
 };
 
 export type AllConfigType = {
   app: AppConfig;
   database: DatabaseConfig;
-  rabbimq: RabbitMQ;
+  rabbitmq: RabbitMqConfig;
 };

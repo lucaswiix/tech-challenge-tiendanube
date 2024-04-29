@@ -1,17 +1,8 @@
 FROM node:18.16.0-alpine
 
-RUN apk add --no-cache bash
-RUN npm i -g @nestjs/cli typescript ts-node
-
-COPY package*.json /tmp/app/
-RUN cd /tmp/app && npm install
-
-COPY . /usr/src/app
-RUN cp -a /tmp/app/node_modules /usr/src/app
-COPY ./startup.sh /opt/startup.sh
-
-WORKDIR /usr/src/app
-RUN cp env-example .env
-RUN npm run build
-
-CMD ["npm", "run", "start:prod"]
+# RUN npm install -g npm@9.6.7
+RUN mkdir -p /var/www/gateway
+WORKDIR /var/www/gateway
+ADD . /var/www/gateway
+RUN npm install
+CMD npm run build && npm run start:prod
