@@ -37,5 +37,5 @@ export class CreateCardDto {
   @MinLength(2)
   @IsNumberString()
   @IsNotEmpty()
-  cvv: number;
+  cvv: string;
 }
