@@ -1,0 +1,47 @@
+name: tiendanube
+
+services: 
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+    expose:
+      - 5672
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ['CMD', 'rabbitmqctl', 'status']
+      interval: 1m30s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  postgres:
+    image: postgis/postgis:15-master
+    ports:
+      - ${DATABASE_PORT}:5432
+    expose:
+      - ${DATABASE_PORT}
+    volumes:
+      - ./.data/db:/var/lib/postgresql/data
+      - ./database-init:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    restart: always
+    healthcheck:
+      test: ["CMD", "pg_isready", "--username=dbuser", "--dbname=payables_db"]
+      interval: 1m30s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    
+  gateway: 
+    image: 'api-gateway'
+    build:
+      dockerfile: /api-gateway/Dockerfile
+
+volumes:
+  rabbitmq-data:
