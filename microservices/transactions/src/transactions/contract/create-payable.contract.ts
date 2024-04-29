@@ -56,5 +56,5 @@ export class CreatePayableContract {
   @MinLength(2)
   @IsNumberString()
   @IsNotEmpty()
-  cardCvv: number;
+  cardCvv: string;
 }

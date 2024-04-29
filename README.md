@@ -57,12 +57,23 @@ documentId: 1112223334455
 
 
 ## Como executar
+
+
+
+
 ```
 docker compose up -d
 ```
+*É necessário possuir docker compose version > v2.24 e docker > 24.0.0 ou execute o serviço postgres antes dos outros*
+```
+docker compose up -d postgres
+docker compose up -d --build
+``` 
+
 
 Swagger disponível em
 https://localhost:3000/docs#
+
 
 ## Executar os testes
 

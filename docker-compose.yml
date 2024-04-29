@@ -32,7 +32,7 @@ services:
       POSTGRES_DB: ${DATABASE_NAME}
     restart: always  
     healthcheck:
-      test: ["CMD", "pg_isready", "-U ${DATABASE_USERNAME}", "-D ${DATABASE_NAME}"]
+      test: ["CMD", "pg_isready", "--username=${DATABASE_USERNAME}", "--dbname=${DATABASE_NAME}"]
       interval: 1m30s
       timeout: 5s
       retries: 5
@@ -41,8 +41,7 @@ services:
     
   gateway: 
     build: ./api-gateway
-    restart: always
-    hostname: gateway
+    hostname: gatewayc
     env_file:
       - ./api-gateway/.env
     ports:
@@ -55,7 +54,6 @@ services:
 
   merchants: 
     build: ./microservices/merchants
-    # restart: always
     # hostname: merchants
     # env_file:
     #   - ./microservices/merchants/.env
