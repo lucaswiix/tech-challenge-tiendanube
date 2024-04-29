@@ -26,6 +26,7 @@ import { AllConfigType } from 'src/config/config.type';
             },
           },
         }),
+        inject: [ConfigService],
       },
     ]),
   ],

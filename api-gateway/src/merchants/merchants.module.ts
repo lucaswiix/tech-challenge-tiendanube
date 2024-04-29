@@ -11,10 +11,11 @@ import { AllConfigType } from 'src/config/config.type';
 @Module({
   imports: [
     CqrsModule,
+    ConfigModule,
     ClientsModule.registerAsync([
       {
-        name: 'MERCHANTS_CLIENT',
         imports: [ConfigModule],
+        name: 'MERCHANTS_CLIENT',
         useFactory: (configService: ConfigService<AllConfigType>) => ({
           transport: Transport.RMQ,
           options: {
@@ -27,10 +28,11 @@ import { AllConfigType } from 'src/config/config.type';
             },
           },
         }),
+        inject: [ConfigService],
       },
       {
-        name: 'TRANSACTIONS_CLIENT',
         imports: [ConfigModule],
+        name: 'TRANSACTIONS_CLIENT',
         useFactory: (configService: ConfigService<AllConfigType>) => ({
           transport: Transport.RMQ,
           options: {
@@ -43,10 +45,11 @@ import { AllConfigType } from 'src/config/config.type';
             },
           },
         }),
+        inject: [ConfigService],
       },
       {
-        name: 'PAYABLES_CLIENT',
         imports: [ConfigModule],
+        name: 'PAYABLES_CLIENT',
         useFactory: (configService: ConfigService<AllConfigType>) => ({
           transport: Transport.RMQ,
           options: {
@@ -59,6 +62,7 @@ import { AllConfigType } from 'src/config/config.type';
             },
           },
         }),
+        inject: [ConfigService],
       },
     ]),
   ],
