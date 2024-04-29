@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { CreatePayableDto } from './dto/create-payable.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SummaryByMerchantId } from './dto/find-all-by-merchant-id.dto';
@@ -21,13 +21,22 @@ export class PayablesService {
     private readonly payablesRepository: Repository<Payable>,
   ) {}
 
+  private readonly logger = new Logger(PayablesService.name);
+
   create(createPayableDto: CreatePayableDto) {
+    this.logger.debug('[Request] PayablesService.create ', createPayableDto);
     const model = new PayableModel(createPayableDto);
     const create = model.createObject();
     return this.payablesRepository.save(this.payablesRepository.create(create));
   }
 
   async summary({ merchantId, filters }: SummaryByMerchantId) {
+    this.logger.debug(
+      '[Request] PayablesService.summarize ',
+      merchantId,
+      filters,
+    );
+
     const { startDate, endDate } = this.validateBetweenDates({
       startDate:
         filters?.betweenDates?.startDate ||
