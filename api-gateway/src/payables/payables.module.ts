@@ -5,6 +5,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CqrsModule } from '@nestjs/cqrs';
 import { AllConfigType } from 'src/config/config.type';
+import { CLIENTS } from 'src/utils/constants';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { AllConfigType } from 'src/config/config.type';
     ClientsModule.registerAsync([
       {
         imports: [ConfigModule],
-        name: 'PAYABLES_CLIENT',
+        name: CLIENTS.PAYABLES_CLIENT,
         useFactory: (configService: ConfigService<AllConfigType>) => ({
           transport: Transport.RMQ,
           options: {

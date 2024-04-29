@@ -9,13 +9,14 @@ import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom, timeout } from 'rxjs';
 import { Merchant } from './models/merchant.model';
 import { IMerchant } from './merchants.interfaces';
-import { EVENT_TIMEOUT } from 'src/utils/constants';
+import { CLIENTS, EVENT_TIMEOUT } from 'src/utils/constants';
 import { MESSAGE_PATTERNS } from 'src/utils/queue.constants';
 
 @Injectable()
 export class MerchantsService {
   constructor(
-    @Inject('MERCHANTS_CLIENT') private readonly merchantsClient: ClientProxy,
+    @Inject(CLIENTS.MERCHANTS_CLIENT)
+    private readonly merchantsClient: ClientProxy,
   ) {}
 
   private readonly logger = new Logger(MerchantsService.name);

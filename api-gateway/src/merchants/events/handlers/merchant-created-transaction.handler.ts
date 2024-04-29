@@ -4,13 +4,14 @@ import { MerchantCreatedTransactionEvent } from '../impl/merchant-created-transa
 import { Inject, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { MESSAGE_PATTERNS } from 'src/utils/queue.constants';
+import { CLIENTS } from 'src/utils/constants';
 
 @EventsHandler(MerchantCreatedTransactionEvent)
 export class MerchantCreatedTransactionHandler
   implements IEventHandler<MerchantCreatedTransactionEvent>
 {
   constructor(
-    @Inject('TRANSACTIONS_CLIENT') private readonly client: ClientProxy,
+    @Inject(CLIENTS.TRANSACTIONS_CLIENT) private readonly client: ClientProxy,
   ) {}
 
   private readonly logger = new Logger(MerchantCreatedTransactionHandler.name);

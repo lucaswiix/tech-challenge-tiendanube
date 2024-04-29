@@ -3,13 +3,15 @@ import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { MESSAGE_PATTERNS } from 'src/utils/queue.constants';
 import { PayableDashboard } from './payables.interfaces';
+import { CLIENTS } from 'src/utils/constants';
 
 @Injectable()
 export class PayablesService {
   private readonly logger = new Logger(PayablesService.name);
 
   constructor(
-    @Inject('PAYABLES_CLIENT') private readonly payableClient: ClientProxy,
+    @Inject(CLIENTS.PAYABLES_CLIENT)
+    private readonly payableClient: ClientProxy,
   ) {}
 
   async summary(
