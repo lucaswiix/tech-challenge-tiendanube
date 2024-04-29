@@ -15,12 +15,15 @@ export class CreateTransactionHandler
   private readonly logger = new Logger(CreateTransactionHandler.name);
 
   async execute(command: CreateTransactionCommand) {
-    this.logger.debug('CreateTransactionHandler', command);
+    this.logger.debug('CreateTransactionHandler', JSON.stringify(command));
     const { merchantId, transaction } = command;
     const merchant = this.publisher.mergeObjectContext(
       await this.merchantsService.findOne(merchantId),
     );
-    this.logger.debug('CreateTransactionHandler.merchant', merchant);
+    this.logger.debug(
+      'CreateTransactionHandler.merchant',
+      JSON.stringify(merchant),
+    );
     merchant.createTransaction(transaction);
     merchant.commit();
   }

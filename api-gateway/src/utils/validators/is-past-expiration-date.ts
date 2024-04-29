@@ -3,7 +3,7 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 import { Injectable } from '@nestjs/common';
-import { parse, isBefore } from 'date-fns';
+import { parse, isAfter } from 'date-fns';
 
 @Injectable()
 @ValidatorConstraint({ name: 'IsPastExpirationDate', async: true })
@@ -18,6 +18,6 @@ export class IsPastExpirationDate implements ValidatorConstraintInterface {
     const parsedExpirationDate = parse(value, 'MM/yyyy', new Date());
     const currentDate = new Date();
 
-    return isBefore(parsedExpirationDate, currentDate);
+    return isAfter(parsedExpirationDate, currentDate);
   }
 }

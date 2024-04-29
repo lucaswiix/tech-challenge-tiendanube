@@ -18,7 +18,7 @@ export class MerchantCreatedTransactionHandler
   handle(event: MerchantCreatedTransactionEvent) {
     this.logger.debug(
       '[Request] MerchantCreatedTransactionHandler.createTransaction',
-      event,
+      JSON.stringify(event),
     );
 
     this.client.emit(MESSAGE_PATTERNS.transactions.create, {
