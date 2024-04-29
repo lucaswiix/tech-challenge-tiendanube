@@ -8,13 +8,13 @@ import { TransactionsModule } from './transactions/transactions.module';
 
 @Module({
   imports: [
-    TransactionsModule,
-    MerchantsModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [databaseConfig, appConfig, rabbitMqConfig],
       envFilePath: ['.env'],
     }),
+    TransactionsModule,
+    MerchantsModule,
   ],
 })
 export class AppModule {}
