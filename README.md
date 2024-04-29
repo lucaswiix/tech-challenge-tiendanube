@@ -40,6 +40,8 @@ https://localhost:3000/docs#
 ## TO DO
 
 - Testes unitários
+- Monitoramento 
+- LogStash
 - Funcionalidade de rollback em caso de falhas no pipeline no saga
 - melhor abstração das camadas de comunicação com message broker
 - Adição de cache
