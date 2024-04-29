@@ -16,7 +16,7 @@ describe('MerchantsController', () => {
             create: jest.fn(),
             findOne: jest.fn(),
           },
-        }
+        },
       ],
     }).compile();
 

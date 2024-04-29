@@ -5,7 +5,9 @@ import {
   IsString,
   MaxLength,
   MinLength,
+  Validate,
 } from 'class-validator';
+import { IsPastExpirationDate } from 'src/utils/validators/is-past-expiration-date';
 
 export class CreateCardDto {
   @ApiProperty({
@@ -20,6 +22,7 @@ export class CreateCardDto {
     example: '4338',
   })
   @IsNotEmpty()
+  @MinLength(12)
   number: number;
 
   @ApiProperty({
@@ -27,6 +30,9 @@ export class CreateCardDto {
   })
   @IsNotEmpty()
   @IsString()
+  @Validate(IsPastExpirationDate, {
+    message: 'Invalid expiration date',
+  })
   expirationDate: string;
 
   @ApiProperty({
