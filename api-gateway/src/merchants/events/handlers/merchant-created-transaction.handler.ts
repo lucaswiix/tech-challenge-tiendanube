@@ -3,7 +3,7 @@ import { EventsHandler } from '@nestjs/cqrs/dist/decorators/events-handler.decor
 import { MerchantCreatedTransactionEvent } from '../impl/merchant-created-transaction.event';
 import { Inject, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { MESSAGE_PATTERNS } from 'src/merchants/services.constants';
+import { MESSAGE_PATTERNS } from 'src/utils/queue.constants';
 
 @EventsHandler(MerchantCreatedTransactionEvent)
 export class MerchantCreatedTransactionHandler
